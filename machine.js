@@ -22,17 +22,15 @@ const states = {
         'b': ['q3', 'b', 'E'],
         'X': ['q0', 'X', 'D']
     },
-    q4: {} // Estado de aceitação, sem transições
+    q4: {}
 };
 
-// Variáveis globais para o funcionamento da máquina
-let tape = [];
 let currentState = 'q0';
 let headPosition = 0;
 let steps = [];
-let hasFinished = false; // Variável para controlar se a máquina já terminou
+let hasFinished = false;
+let tape = [];
 
-// Inicia a máquina
 function startMachine() {
     const input = document.getElementById('inputSentence').value.trim();
     if (!input) {
@@ -40,60 +38,40 @@ function startMachine() {
         return;
     }
 
-    // Inicializa a fita
-    tape = ['●', ...input.split(''), 'β']; // Adicionando os delimitadores no início e no fim
+    tape = ['●', ...input.split(''), 'β'];
     headPosition = 0;
     currentState = 'q0';
     steps = [];
-    hasFinished = false; // Reseta o controle de término
+    hasFinished = false;
 
-    // Desabilita os botões
     document.querySelector('button[onclick="startMachine()"]').disabled = true;
     document.querySelector('button[onclick="stepMachine()"]').disabled = true;
 
-    // Executa a máquina automaticamente
     executeStep();
 }
 
-// Executa um passo da máquina
 function executeStep() {
-    if (hasFinished) return; // Se já terminou, não faz nada
+    if (hasFinished) return;
 
     const symbol = tape[headPosition];
     const transition = states[currentState][symbol];
 
-    // Se não há transição, a sentença é rejeitada
     if (!transition) {
-        steps.push({
-            step: steps.length + 1,
-            state: currentState,
-            tape: tape.join(''),
-            headPosition: headPosition,
-            error: true
-        });
-
-        updateStepsTable(true); // Passo rejeitado
-        document.getElementById('result').innerText = `Sentença rejeitada no estado ${currentState} após ${steps.length} passos.`;
-        resetButtons(); // Reseta os botões
-        hasFinished = true; // Marca como terminado
+        handleError();
         return;
     }
 
-    // Desestrutura a transição
     const [nextState, writeSymbol, moveDirection] = transition;
 
-    // Atualiza a fita e o estado
     tape[headPosition] = writeSymbol;
     currentState = nextState;
 
-    // Move a cabeça de leitura
     if (moveDirection === 'D') {
         headPosition++;
     } else if (moveDirection === 'E') {
         headPosition--;
     }
 
-    // Salva o passo
     steps.push({
         step: steps.length + 1,
         state: currentState,
@@ -102,75 +80,57 @@ function executeStep() {
         error: false
     });
 
-    // Atualiza a interface
-    updateStepsTable(); // Passo aceito
+    updateStepsTable();
 
-    // Se chegar ao estado final
     if (currentState === 'q4') {
         document.getElementById('result').innerText = `Sentença aceita após ${steps.length} passos.`;
-        resetButtons(); // Reseta os botões
-        hasFinished = true; // Marca como terminado
+        resetButtons();
+        hasFinished = true;
         return;
     }
 
-    // Continua executando o próximo passo
     setTimeout(executeStep, 800);
 }
 
-// Executa a máquina um passo de cada vez
 function stepMachine() {
-    if (hasFinished) return; // Se já terminou, não faz nada
+    if (hasFinished) return; 
 
     const input = document.getElementById('inputSentence').value.trim();
 
-    // Se a fita não foi inicializada, inicializa com a sentença inserida
+    
     if (steps.length === 0) {
         if (!input) {
             alert("Por favor, insira uma sentença.");
             return;
         }
-        tape = ['●', ...input.split(''), 'β']; // Inicializa a fita
+        tape = ['●', ...input.split(''), 'β']; 
         headPosition = 0;
         currentState = 'q0';
         steps = [];
-        hasFinished = false; // Reseta o controle de término
+        hasFinished = false; 
     }
 
     const symbol = tape[headPosition];
     const transition = states[currentState][symbol];
 
-    // Se não há transição, a sentença é rejeitada
     if (!transition) {
-        steps.push({
-            step: steps.length + 1,
-            state: currentState,
-            tape: tape.join(''),
-            headPosition: headPosition,
-            error: true
-        });
-
-        updateStepsTable(true); // Passo rejeitado
-        document.getElementById('result').innerText = `Sentença rejeitada no estado ${currentState} após ${steps.length} passos.`;
-        resetButtons(); // Reseta os botões
-        hasFinished = true; // Marca como terminado
+        handleError();
         return;
     }
 
-    // Desestrutura a transição
     const [nextState, writeSymbol, moveDirection] = transition;
 
-    // Atualiza a fita e o estado
     tape[headPosition] = writeSymbol;
     currentState = nextState;
 
-    // Move a cabeça de leitura
+    
     if (moveDirection === 'D') {
         headPosition++;
     } else if (moveDirection === 'E') {
         headPosition--;
     }
 
-    // Salva o passo
+    
     steps.push({
         step: steps.length + 1,
         state: currentState,
@@ -179,74 +139,88 @@ function stepMachine() {
         error: false
     });
 
-    // Atualiza a interface
-    updateStepsTable(); // Passo aceito
+    
+    updateStepsTable(); 
 
-    // Se chegar ao estado final
+    
     if (currentState === 'q4') {
         document.getElementById('result').innerText = `Sentença aceita após ${steps.length} passos.`;
-        resetButtons(); // Reseta os botões
-        hasFinished = true; // Marca como terminado
+        resetButtons(); 
+        hasFinished = true; 
         return;
     }
 }
 
-// Reseta a máquina para um novo ciclo
-function resetMachine() {
-    tape = [];
-    currentState = 'q0';
-    headPosition = 0;
-    steps = [];
-    hasFinished = false; // Reseta o controle de término
-    document.getElementById('inputSentence').value = '';
-    document.getElementById('stepsTable').querySelector('tbody').innerHTML = '';
-    document.getElementById('result').innerText = '';
-    resetButtons(); // Reseta os botões
+function handleError() {
+    steps.push({
+        step: steps.length + 1,
+        state: currentState,
+        tape: tape.join(''),
+        headPosition: headPosition,
+        error: true
+    });
+
+    updateStepsTable(true);
+    document.getElementById('result').innerText = `Sentença rejeitada no estado ${currentState} após ${steps.length} passos.`;
+    resetButtons();
+    hasFinished = true;
 }
 
-// Função para reabilitar os botões
-function resetButtons() {
-    document.querySelector('button[onclick="startMachine()"]').disabled = false;
-    document.querySelector('button[onclick="stepMachine()"]').disabled = false;
-}
-
-// Atualiza a tabela de passos
 function updateStepsTable(isError = false) {
     const tableBody = document.querySelector('#stepsTable tbody');
     const lastStep = steps[steps.length - 1];
     const row = document.createElement('tr');
 
-    // Define a cor da linha com base no resultado
     if (isError) {
-        row.style.backgroundColor = 'rgba(255, 0, 0, 0.5)'; // Vermelho para erro
+        row.style.backgroundColor = 'rgba(255, 0, 0, 0.5)';
     } else {
-        row.style.backgroundColor = currentState === 'q4' ? 'rgba(0, 255, 0, 0.5)' : 'transparent'; // Verde se aceito, transparente se não
+        row.style.backgroundColor = currentState === 'q4' ? 'rgba(0, 255, 0, 0.5)' : 'transparent';
     }
+
+    const highlightedTape = tape.map((symbol, index) => {
+        return index === headPosition ? `<strong style="color: blue;">${symbol}</strong>` : symbol;
+    }).join('');
 
     row.innerHTML = `
         <td>${lastStep.step}</td>
         <td>${lastStep.state}</td>
-        <td>${lastStep.tape}</td>
-        <td>${lastStep.headPosition}</td>
+        <td>${highlightedTape}</td>
+        <td>${headPosition}</td>
     `;
     tableBody.appendChild(row);
 }
 
-// Função para gerar uma sentença aleatória com 'a' e 'b'
+function resetButtons() {
+    document.querySelector('button[onclick="startMachine()"]').disabled = false;
+    document.querySelector('button[onclick="stepMachine()"]').disabled = false;
+}
+
+function resetMachine() {
+    tape = [];
+    currentState = 'q0';
+    headPosition = 0;
+    steps = [];
+    hasFinished = false;
+    document.getElementById('inputSentence').value = '';
+    document.getElementById('stepsTable').querySelector('tbody').innerHTML = '';
+    document.getElementById('result').innerText = '';
+    resetButtons();
+}
+
 function generateRandomSentence() {
-    const length = Math.floor(Math.random() * 8) + 1; // Gera um comprimento entre 1 e 8
+    const length = Math.floor(Math.random() * 8) + 1;
     let sentence = '';
 
     for (let i = 0; i < length; i++) {
-        sentence += Math.random() < 0.5 ? 'a' : 'b'; // Adiciona 'a' ou 'b' aleatoriamente
+        sentence += Math.random() < 0.5 ? 'a' : 'b';
     }
 
-    document.getElementById('inputSentence').value = sentence; // Coloca a sentença gerada no input
+    document.getElementById('inputSentence').value = sentence;
 }
 
 document.getElementById('inputSentence').addEventListener('input', function(event) {
-    const validInput = event.target.value.replace(/[^ab]/g, ''); // Remove tudo que não é 'a' ou 'b'
+    const validInput = event.target.value.replace(/[^ab]/g, '');
     if (event.target.value !== validInput) {
-        event.target.value = validInput; // Atualiza o valor do input se houver caracteres inválidos
+        event.target.value = validInput;
     }
 });
