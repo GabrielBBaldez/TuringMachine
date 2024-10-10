@@ -243,3 +243,10 @@ function generateRandomSentence() {
 
     document.getElementById('inputSentence').value = sentence; // Coloca a sentença gerada no input
 }
+
+document.getElementById('inputSentence').addEventListener('input', function(event) {
+    const validInput = event.target.value.replace(/[^ab]/g, ''); // Remove tudo que não é 'a' ou 'b'
+    if (event.target.value !== validInput) {
+        event.target.value = validInput; // Atualiza o valor do input se houver caracteres inválidos
+    }
+});
