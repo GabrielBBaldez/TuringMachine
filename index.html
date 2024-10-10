@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máquina de Turing</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="topbar">
+        <img src="turingpng.png" alt="Alan Turing" class="turing-logo">
+        <h1>Máquina de Turing</h1>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Expressão</h2>
+            <p class="description">L = {(a|b)* e a quantidade de a’s é igual a quantidade de b’s}</p>
+            <h2>Tabela de Transições</h2>
+            <table id="transitionTable">
+                <thead>
+                    <tr>
+                        <th>δ</th>
+                        <th>●</th>
+                        <th>a</th>
+                        <th>b</th>
+                        <th>X</th>
+                        <th>β</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>→q0</td>
+                        <td>(q0, ●, D)</td>
+                        <td>(q2, X, D)</td>
+                        <td>(q1, X, D)</td>
+                        <td>(q0, X, D)</td>
+                        <td>(q4, β, D)</td>
+                    </tr>
+                    <tr>
+                        <td>q1</td>
+                        <td>-</td>
+                        <td>(q3, X, E)</td>
+                        <td>(q1, b, D)</td>
+                        <td>(q1, X, D)</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>q2</td>
+                        <td>-</td>
+                        <td>(q2, a, D)</td>
+                        <td>(q3, X, E)</td>
+                        <td>(q2, X, D)</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>q3</td>
+                        <td>-</td>
+                        <td>(q3, a, E)</td>
+                        <td>(q3, b, E)</td>
+                        <td>(q0, X, D)</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>*q4</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-section">
+                <div class="info-text">
+                    <p>Alan Turing foi um matemático, lógico e criptógrafo britânico, amplamente considerado um dos pais da ciência da computação moderna. Ele desempenhou um papel crucial na quebra de códigos durante a Segunda Guerra Mundial, especialmente o código Enigma usado pela Alemanha nazista.</p>
+                    <p>A Máquina de Turing, proposta por Turing em 1936, é um modelo teórico que descreve uma máquina capaz de simular qualquer algoritmo computacional. Consiste em uma fita infinita dividida em células, um cabeçote de leitura/escrita que se move ao longo da fita e um conjunto de regras que determina como a máquina deve manipular os símbolos na fita. Esse conceito é fundamental para a teoria da computação e ajuda a entender os limites do que pode ser computado.</p>
+                </div>
+                <img src="turing.png" alt="Alan Turing" class="turing-image">
+            </div>
+        </div>
+        <div class="content">
+            <label for="inputSentence">Insira a sentença (apenas a's e b's):</label>
+            <input type="text" id="inputSentence" placeholder="Ex: aabbb">
+            <div class="button-group">
+                <button onclick="generateRandomSentence()">Gerar Sentença</button>
+                <button onclick="startMachine()">Iniciar</button>
+                <button id="stepButton" onclick="stepMachine()">Passo a Passo</button>
+                <button onclick="resetMachine()">Resetar</button>
+            </div>
+            <h2>Passos da Máquina:</h2>
+            <table id="stepsTable">
+                <thead>
+                    <tr>
+                        <th>Passo</th>
+                        <th>Estado</th>
+                        <th>Fita</th>
+                        <th>Cabeça de Leitura</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <script src="machine.js"></script>
+</body>
+</html>
