@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Máquina de Turing</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="topbar">
@@ -83,10 +84,18 @@
             <label for="inputSentence">Insira a sentença (apenas a's e b's):</label>
             <input type="text" id="inputSentence" placeholder="Digite uma sequência de a's e b's">
             <div class="button-group">
-                <button onclick="generateRandomSentence()">Gerar Sentença</button>
-                <button onclick="startMachine()">Iniciar</button>
-                <button id="stepButton" onclick="stepMachine()">Passo a Passo</button>
-                <button onclick="resetMachine()">Resetar</button>
+                <button onclick="generateRandomSentence()" title="Gera uma sequência aleatória de a's e b's">
+                    <i class="fas fa-random"></i> Gerar Sentença
+                </button>
+                <button onclick="startMachine()" title="Inicia a Máquina de Turing">
+                    <i class="fas fa-play"></i> Iniciar
+                </button>
+                <button id="stepButton" onclick="stepMachine()" title="Executa a Máquina de Turing passo a passo">
+                    <i class="fas fa-step-forward"></i> Passo a Passo
+                </button>
+                <button onclick="resetMachine()" title="Reseta a Máquina de Turing para o estado inicial">
+                    <i class="fas fa-undo"></i> Resetar
+                </button>              
             </div>
             <h2>Passos da Máquina:</h2>
             <table id="stepsTable">
